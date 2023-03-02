@@ -1,0 +1,50 @@
+#include <16F877a.h>
+#device ADC=10
+#use delay(crystal=20000000)
+#FUSES NOWDT, NOBROWNOUT, NOLVP
+
+#include <lcd.c>
+
+#USE STANDARD_IO(D)
+#DEFINE menor 0
+#DEFINE mayor 15
+#DEFINE boton1 PIN_D0
+#DEFINE boton2 PIN_D1
+int8 count = 0;
+
+void actu(){
+   printf(lcd_putc,"\fNumero: %02u",count);
+}
+
+void sumar(){
+   if(count == mayor){
+      count=menor;
+   }else{
+      count++;
+   }
+   actu();
+}
+
+void restar(){
+   if(count == menor){
+      count = mayor;
+   }else{
+      count--;
+   }
+   actu();
+}
+
+void main()
+{
+   lcd_init();
+   actu();
+   while(TRUE){
+      if(input(boton1)){
+         while(input(boton1)){}
+         sumar();
+      }if(input(boton2)){
+         while(input(boton2)){}
+         restar();
+      }
+   }
+}
